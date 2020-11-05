@@ -1,2 +1,2 @@
-# mgmt-webservers
-Management scripts and utils for adminstration of Debian webservers.
+# Debian Webserver Management
+Scripts and utilities for adminstration of Debian webservers.
