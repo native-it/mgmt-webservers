@@ -5,7 +5,6 @@
 # This script is designed to work in conjunction with Virtualmin's scheduled backups stored locally in /usr/share/backup/servers. When executed, this will
 # take the files in the backup folder and move them to Backblaze B2 storage already configured.
 
-
 # Set variables
 RCLONE_CONFIG=/root/.config/rclone/rclone.conf
 SCREEN_NAME=$(basename "$0" | cut -d '.' -f 1)
@@ -13,6 +12,9 @@ NOW=$(date +"%Y-%m-%d")
 export RCLONE_CONFIG
 export SCREEN_NAME
 export NOW
+
+# Setup garbage collector to preserve memory
+export GOGC=20
 
 # Exit if script is already running
 if ! [[ $(screen -S "$SCREEN_NAME" -Q select .) ]]; then
@@ -47,7 +49,7 @@ while [ "$1" != "" ]; do
 done
 
 # Run rclone command using set bandwidth, otherwise default to 4M
-screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit "$BANDWIDTH"M --transfers 8 --checkers 10 --update --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW 2>&1 | tee /usr/share/backup/log/rclone-move.log'
+screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit "$BANDWIDTH"M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW 2>&1 | tee /usr/share/backup/log/rclone-move.log'
 else
-screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit 4M --transfers 8 --checkers 10 --update --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW 2>&1 | tee /usr/share/backup/log/rclone-move.log'
+screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit 4M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW 2>&1 | tee /usr/share/backup/log/rclone-move.log'
 fi
