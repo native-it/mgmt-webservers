@@ -7,10 +7,8 @@
 
 # Set variables
 RCLONE_CONFIG=/root/.config/rclone/rclone.conf
-SCREEN_NAME=$(basename "$0" | cut -d '.' -f 1)
 NOW=$(date +"%Y-%m-%d")
 export RCLONE_CONFIG
-export SCREEN_NAME
 export NOW
 
 # Setup garbage collector to preserve memory
@@ -49,7 +47,7 @@ while [ "$1" != "" ]; do
 done
 
 # Run rclone command using set bandwidth, otherwise default to 4M
-screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit "$BANDWIDTH"M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
+bash -c 'rclone move --bwlimit "$BANDWIDTH"M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
 else
-screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit 4M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
+bash -c 'rclone move --bwlimit 4M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
 fi
