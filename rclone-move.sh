@@ -47,7 +47,7 @@ while [ "$1" != "" ]; do
 done
 
 # Run rclone command using set bandwidth, otherwise default to 4M
-bash -c 'rclone move --bwlimit "$BANDWIDTH"M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
+bash -c 'rclone move --bwlimit "$BANDWIDTH"M --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
 else
-bash -c 'rclone move --bwlimit 4M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
+bash -c 'rclone move --bwlimit 4M --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
 fi
