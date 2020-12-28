@@ -17,9 +17,9 @@ export NOW
 export GOGC=20
 
 # Exit if script is already running
-if ! [[ $(screen -S "$SCREEN_NAME" -Q select .) ]]; then
-	echo "$SCREEN_NAME is running, exiting..."
-     exit 1
+if [[ $(pidof -x "$0" | wc -w) -gt 2 ]]; then
+    echo "$0 already running"
+    exit
 fi
 
 # Show help message when using -h
@@ -49,7 +49,7 @@ while [ "$1" != "" ]; do
 done
 
 # Run rclone command using set bandwidth, otherwise default to 4M
-screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit "$BANDWIDTH"M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW 2>&1 | tee /usr/share/backup/log/rclone-move.log'
+screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit "$BANDWIDTH"M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
 else
-screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit 4M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW 2>&1 | tee /usr/share/backup/log/rclone-move.log'
+screen -dmS $SCREEN_NAME bash -c 'rclone move --bwlimit 4M --use-mmap --buffer-size 0M --transfers 1 --checkers 1 --log-file /usr/share/backup/log/rclone-move_$NOW.log /usr/share/backup/servers backblaze:HOST-WEB01/$NOW'
 fi
