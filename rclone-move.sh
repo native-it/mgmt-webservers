@@ -8,10 +8,11 @@
 
 # Set variables
 RCLONE_CONFIG=/root/.config/rclone/rclone.conf
-NOW=$(date +"%Y-%m-%d")
 SCREEN_NAME=$(basename "$0" | cut -d '.' -f 1)
+NOW=$(date +"%Y-%m-%d")
 export RCLONE_CONFIG
 export SCREEN_NAME
+export NOW
 
 # Exit if script is already running
 if ! [[ $(screen -S "$SCREEN_NAME" -Q select .) ]]; then
